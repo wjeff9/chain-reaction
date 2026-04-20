@@ -1,0 +1,25 @@
+:root {
+  --bg: #1a1b26;
+  --panel-bg: #24283b;
+  --text: #c0caf5;
+  --text-muted: #565f89;
+  --border: #414868;
+  --red: #f7768e;
+  --green: #9ece6a;
+  --blue: #7aa2f7;
+  --cyan: #7dcfff;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Geist Sans', sans-serif;
+}

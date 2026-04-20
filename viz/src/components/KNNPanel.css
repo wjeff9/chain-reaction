@@ -1,0 +1,12 @@
+.knn-panel {
+  padding: 0.75rem;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: var(--panel-bg);
+  border-radius: 0.5rem;
+}
+
+.knn-panel h3 {
+  margin-top: 0;
+  color: var(--cyan);
+}
