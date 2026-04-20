@@ -25,7 +25,7 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
   let hitZones: any[] = [];
 
   useEffect(() => {
-    d3.json('/brazil.json').then((json) => setGeoData(json));
+    d3.json(`${import.meta.env.BASE_URL}brazil.json`).then((json) => setGeoData(json));
   }, []);
 
   useEffect(() => {

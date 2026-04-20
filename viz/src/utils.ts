@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { OrderItem } from './types';
 
 export const loadData = async (): Promise<OrderItem[]> => {
-  const data = await d3.csv('/data/olist_data.csv', (d: any) => {
+  const data = await d3.csv(`${import.meta.env.BASE_URL}data/olist_data.csv`, (d: any) => {
     return {
       order_id: d.order_id,
       customer_id: d.customer_id,
