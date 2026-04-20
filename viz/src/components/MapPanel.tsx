@@ -9,7 +9,6 @@ interface MapPanelProps {
   onOrderSelect: (orderId: string) => void;
 }
 
-const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000;
 
 export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrderSelect }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -20,20 +19,46 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
   const [showLate, setShowLate] = useState(true);
   const [showSingle, setShowSingle] = useState(true);
   const [showMulti, setShowMulti] = useState(true);
-  const [dateRange, setDateRange] = useState<[Date, Date]>([new Date('2017-01-01'), new Date('2017-01-15')]);
-  const initializedRef = useRef(false);
+  const [monthIdx, setMonthIdx] = useState(0);
   let hitZones: any[] = [];
 
   useEffect(() => {
     d3.json(`${import.meta.env.BASE_URL}brazil.json`).then((json) => setGeoData(json));
   }, []);
 
-  useEffect(() => {
-    if (data.length === 0 || initializedRef.current) return;
-    initializedRef.current = true;
-    const minDate = new Date(Math.min(...data.map(o => o.order_purchase_timestamp.getTime())));
-    setDateRange([minDate, new Date(minDate.getTime() + TWO_WEEKS_MS)]);
+  const monthStarts = useMemo(() => {
+    if (data.length === 0) return [];
+    const dataMin = d3.min(data, d => d.order_purchase_timestamp)!;
+    const dataMax = d3.max(data, d => d.order_purchase_timestamp)!;
+
+    const firstOfMin = new Date(dataMin.getFullYear(), dataMin.getMonth(), 1);
+    const start = dataMin.getDate() === 1
+      ? firstOfMin
+      : new Date(firstOfMin.getFullYear(), firstOfMin.getMonth() + 1, 1);
+
+    const lastDayOfMax = new Date(dataMax.getFullYear(), dataMax.getMonth() + 1, 0).getDate();
+    const firstOfMax = new Date(dataMax.getFullYear(), dataMax.getMonth(), 1);
+    const end = dataMax.getDate() >= lastDayOfMax
+      ? firstOfMax
+      : new Date(firstOfMax.getFullYear(), firstOfMax.getMonth() - 1, 1);
+
+    const starts: Date[] = [];
+    const cur = new Date(start);
+    while (cur <= end) {
+      starts.push(new Date(cur));
+      cur.setMonth(cur.getMonth() + 1);
+    }
+    return starts;
   }, [data]);
+
+  const dateRange = useMemo((): [Date, Date] => {
+    if (monthStarts.length === 0) return [new Date(), new Date()];
+    const start = monthStarts[monthIdx];
+    const end = monthIdx + 1 < monthStarts.length
+      ? monthStarts[monthIdx + 1]
+      : new Date(start.getFullYear(), start.getMonth() + 1, 1);
+    return [start, end];
+  }, [monthIdx, monthStarts]);
 
   const multiSellerOrderIds = useMemo(() => {
     const result = new Set<string>();
@@ -53,8 +78,6 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
     const dpr = window.devicePixelRatio || 1;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
 
     const context = canvas.getContext('2d');
     if (!context) return;
@@ -68,7 +91,6 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
     const cText = docStyle.getPropertyValue('--text').trim() || '#c0caf5';
     const cRed = docStyle.getPropertyValue('--red').trim() || '#f7768e';
     const cGreen = docStyle.getPropertyValue('--green').trim() || '#9ece6a';
-    const cBlue = docStyle.getPropertyValue('--blue').trim() || '#7aa2f7';
 
     context.fillStyle = cPanelBg;
     context.fillRect(0, 0, width, height);
@@ -117,7 +139,7 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
           context.stroke();
 
           const size = 10;
-          context.fillStyle = cBlue;
+          context.fillStyle = d.arrival_delta > 0 ? cRed : cGreen;
           context.fillRect(pSeller[0] - size / 2, pSeller[1] - size / 2, size, size);
 
           const r = 3;
@@ -137,7 +159,7 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
           if (showSellers) {
             hitZones.push({ x: pSeller[0], y: pSeller[1], r: 10, orderId });
             const size = 6;
-            context.fillStyle = cBlue;
+            context.fillStyle = d.arrival_delta > 0 ? cRed : cGreen;
             context.fillRect(pSeller[0] - size / 2, pSeller[1] - size / 2, size, size);
           }
         }
@@ -166,7 +188,12 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
     context.globalAlpha = 1;
 
     const clickHandler = (event: any) => {
-      const [x, y] = d3.pointer(event);
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = width / rect.width;
+      const scaleY = height / rect.height;
+      const [cssX, cssY] = d3.pointer(event);
+      const x = cssX * scaleX;
+      const y = cssY * scaleY;
       let closestObj: any = null;
       let minD = Infinity;
 
@@ -185,19 +212,12 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
 
   }, [data, geoData, selectedOrderId, dateRange, showOnTime, showLate, showSingle, showMulti, showCustomers, showSellers, onOrderSelect, multiSellerOrderIds]);
 
-  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newStart = new Date(e.target.value);
-    if (isNaN(newStart.getTime())) return;
-    const cappedEnd = new Date(Math.min(dateRange[1].getTime(), newStart.getTime() + TWO_WEEKS_MS));
-    setDateRange([newStart, cappedEnd]);
-  };
+  const maxIdx = Math.max(0, monthStarts.length - 2);
+  const startPct = monthStarts.length > 1 ? (monthIdx / (monthStarts.length - 1)) * 100 : 0;
+  const endPct = monthStarts.length > 1 ? ((monthIdx + 1) / (monthStarts.length - 1)) * 100 : 100;
 
-  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newEnd = new Date(e.target.value);
-    if (isNaN(newEnd.getTime())) return;
-    const cappedStart = new Date(Math.max(dateRange[0].getTime(), newEnd.getTime() - TWO_WEEKS_MS));
-    setDateRange([cappedStart, newEnd]);
-  };
+  const formatMonth = (d: Date) =>
+    d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 
   return (
     <div className="map-panel">
@@ -224,23 +244,24 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
 
           <section className="map-panel-filter-section">
             <span className="map-panel-filter-label">Time range</span>
-            <label>
-              From
+            <div className="range-slider">
+              <div className="range-slider-track">
+                <div
+                  className="range-slider-range"
+                  style={{ left: `${startPct}%`, width: `${endPct - startPct}%` }}
+                />
+              </div>
               <input
-                type="date"
-                value={dateRange[0].toISOString().split('T')[0]}
-                onChange={handleStartDateChange}
+                type="range"
+                min={0}
+                max={maxIdx}
+                value={monthIdx}
+                onChange={e => setMonthIdx(+e.target.value)}
               />
-            </label>
-            <label>
-              To
-              <input
-                type="date"
-                value={dateRange[1].toISOString().split('T')[0]}
-                max={new Date(dateRange[0].getTime() + TWO_WEEKS_MS).toISOString().split('T')[0]}
-                onChange={handleEndDateChange}
-              />
-            </label>
+            </div>
+            <div className="range-slider-labels">
+              <span>{monthStarts.length > 0 ? formatMonth(dateRange[0]) : ''}</span>
+            </div>
           </section>
         </aside>
 
@@ -249,6 +270,26 @@ export const MapPanel: React.FC<MapPanelProps> = ({ data, selectedOrderId, onOrd
             <canvas ref={canvasRef} className="map-panel-canvas" width={800} height={800} />
           </div>
         </div>
+
+        <aside className="map-panel-legend">
+          <span className="map-panel-filter-label">Legend</span>
+          <div className="map-panel-legend-item">
+            <div className="legend-circle legend-green" />
+            <span>On-time customer</span>
+          </div>
+          <div className="map-panel-legend-item">
+            <div className="legend-square legend-green" />
+            <span>On-time seller</span>
+          </div>
+          <div className="map-panel-legend-item">
+            <div className="legend-circle legend-red" />
+            <span>Late customer</span>
+          </div>
+          <div className="map-panel-legend-item">
+            <div className="legend-square legend-red" />
+            <span>Late seller</span>
+          </div>
+        </aside>
       </div>
     </div>
   );
