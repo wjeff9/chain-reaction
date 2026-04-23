@@ -86,7 +86,10 @@ export const GanttPanel: React.FC<GanttPanelProps> = ({ orderItems }) => {
   return (
     <div className="gantt-panel">
       <h3>Delivery Timeline</h3>
-      <svg ref={svgRef} width="100%" height={300} viewBox="0 0 600 300"></svg>
+      {orderItems.length === 0
+        ? <p className="panel-placeholder">Select an order.</p>
+        : <svg ref={svgRef} width="100%" height={300} viewBox="0 0 600 300"></svg>
+      }
     </div>
   );
 };

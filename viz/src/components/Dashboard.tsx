@@ -11,10 +11,7 @@ export const Dashboard: React.FC = () => {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
   useEffect(() => {
-    loadData().then(d => {
-      setData(d);
-      if (d.length > 0) setSelectedOrderId(d[0].order_id);
-    });
+    loadData().then(d => setData(d));
   }, []);
 
   const selectedOrderItems = data.filter(d => d.order_id === selectedOrderId);
@@ -30,10 +27,10 @@ export const Dashboard: React.FC = () => {
       </div>
       <div className="dashboard-right">
         <div className="dashboard-right-top">
-          {selectedOrderId && <GanttPanel orderItems={selectedOrderItems} />}
+          <GanttPanel orderItems={selectedOrderItems} />
         </div>
         <div className="dashboard-right-bottom">
-          {selectedOrderId && <KNNPanel orderItems={selectedOrderItems} allData={data} />}
+          <KNNPanel orderItems={selectedOrderItems} allData={data} />
         </div>
       </div>
     </div>
