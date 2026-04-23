@@ -11,7 +11,10 @@
 .map-panel>h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
-  color: var(--cyan);
+  padding-bottom: 0.5rem;
+  font-size: 1.25rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--text-muted);
 }
 
 .map-panel-body {
@@ -45,9 +48,11 @@
 
 .map-panel-filters-title {
   margin: 0 0 0.25rem;
+  padding-bottom: 0.25rem;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text);
+  border-bottom: 1px solid var(--text-muted);
 }
 
 .map-panel-filter-section {
@@ -71,6 +76,63 @@
   gap: 0.375em;
   font-size: 0.875rem;
   cursor: pointer;
+}
+
+.map-panel-filter-section input[type='radio'],
+.map-panel-filter-section input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.map-panel-filter-section input[type='radio'] {
+  border-radius: 50%;
+}
+
+.map-panel-filter-section input[type='checkbox'] {
+  border-radius: 0.2rem;
+}
+
+.map-panel-filter-section input[type='radio']:checked,
+.map-panel-filter-section input[type='checkbox']:checked {
+  border-color: var(--cyan);
+  background: var(--cyan);
+}
+
+.map-panel-filter-section input[type='radio']:checked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+.map-panel-filter-section input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  left: 0.175rem;
+  top: 0.05rem;
+  width: 0.3rem;
+  height: 0.525rem;
+  border: 2px solid var(--bg);
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+.map-panel-filter-section input[type='radio']:hover,
+.map-panel-filter-section input[type='checkbox']:hover {
+  border-color: var(--cyan);
 }
 
 .range-slider {
@@ -231,9 +293,11 @@
 
 .subpanel-title {
   margin: 0 0 0.25rem;
+  padding-bottom: 0.25rem;
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--text);
+  border-bottom: 1px solid var(--text-muted);
 }
 
 .subpanel-list {

@@ -11,6 +11,7 @@ export interface OrderItem {
   order_purchase_timestamp: Date;
   order_approved_at: Date;
   order_delivered_carrier_date: Date;
+  shipping_limit_date: Date;
   order_estimated_delivery_date: Date;
   order_delivered_customer_date: Date;
 }

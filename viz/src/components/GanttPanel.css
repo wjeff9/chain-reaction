@@ -4,9 +4,15 @@
   box-sizing: border-box;
   background-color: var(--panel-bg);
   border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .gantt-panel h3 {
   margin-top: 0;
-  color: var(--cyan);
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1.25rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--text-muted);
 }

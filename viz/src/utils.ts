@@ -16,6 +16,7 @@ export const loadData = async (): Promise<OrderItem[]> => {
       order_purchase_timestamp: new Date(d.order_purchase_timestamp),
       order_approved_at: new Date(d.order_approved_at),
       order_delivered_carrier_date: new Date(d.order_delivered_carrier_date),
+      shipping_limit_date: new Date(d.shipping_limit_date),
       order_estimated_delivery_date: new Date(d.order_estimated_delivery_date),
       order_delivered_customer_date: new Date(d.order_delivered_customer_date),
     };
@@ -43,9 +44,9 @@ export const haversineDistance = (
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 };
