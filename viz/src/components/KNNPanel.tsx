@@ -78,7 +78,7 @@ export const KNNPanel: React.FC<KNNPanelProps> = ({ orderItems, allData }) => {
       .data(nodes)
       .join('g');
 
-    const customerShape = node.filter((d: any) => d.type === 'customer')
+    node.filter((d: any) => d.type === 'customer')
       .append('circle')
       .attr('r', d => d.root ? 12 : 8)
       .attr('fill', d => d.data.arrival_delta > 0 ? 'var(--red)' : 'var(--green)')
@@ -110,7 +110,7 @@ export const KNNPanel: React.FC<KNNPanelProps> = ({ orderItems, allData }) => {
       .style('white-space', 'pre-wrap')
       .style('box-shadow', '0 4px 6px rgba(0,0,0,0.3)');
 
-    node.on('mouseover', (event, d: any) => {
+    node.on('mouseover', (_event, d: any) => {
       tooltip.style('visibility', 'visible').text(titleFn(d));
     })
     .on('mousemove', (event) => {
