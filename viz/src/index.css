@@ -6,7 +6,6 @@
   --border: #414868;
   --red: #f7768e;
   --green: #9ece6a;
-  --blue: #7aa2f7;
   --cyan: #7dcfff;
 }
 
@@ -24,14 +23,46 @@ body {
   font-family: 'Geist Sans', sans-serif;
 }
 
+/* Shared panel styles */
+.panel {
+  padding: 0.75rem;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: var(--panel-bg);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel > h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1.25rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--text-muted);
+}
 
 .panel-placeholder {
   margin: 0;
   padding: 0.75rem 0;
-  font-size: 0.875rem;
+  font-size: 1.5rem;
   color: var(--text-muted);
+  text-align: center;
+  width: 100%;
 }
 
+/* Shared panel section title (legend, filters, subpanels) */
+.panel-section-title {
+  margin: 0 0 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text);
+  border-bottom: 1px solid var(--text-muted);
+}
+
+/* Shared legend sidebar */
 .panel-legend {
   width: 100%;
   display: flex;
@@ -43,18 +74,18 @@ body {
   box-sizing: border-box;
 }
 
-.panel-legend-title {
-  margin: 0 0 0.25rem;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
 .panel-legend-item {
   display: flex;
   align-items: center;
   gap: 0.5em;
   font-size: 0.875rem;
+}
+
+/* When the legend is a flex sibling of a chart */
+.panel-legend-aside {
+  width: 9rem;
+  flex-shrink: 0;
+  align-self: flex-start;
 }
 
 .legend-square,
@@ -74,4 +105,10 @@ body {
 
 .legend-red {
   background-color: var(--red);
+}
+
+.legend-dash-icon {
+  width: 0.625rem;
+  height: 0.625rem;
+  flex-shrink: 0;
 }

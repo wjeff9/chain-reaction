@@ -33,3 +33,9 @@ eda/data/
 node_modules/
 dist/
 build/
+
+# Archives / Submissions
+*.zip
+
+# NPM logs
+npm-debug.log*

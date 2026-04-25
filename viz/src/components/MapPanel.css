@@ -1,26 +1,6 @@
-.map-panel {
-  padding: 0.75rem;
-  height: 100%;
-  box-sizing: border-box;
-  background-color: var(--panel-bg);
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.map-panel>h3 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.5rem;
-  font-size: 1.25rem;
-  color: var(--text);
-  border-bottom: 1px solid var(--text-muted);
-}
-
 .map-panel-body {
   display: flex;
   flex-direction: row;
-  gap: 0rem;
   flex: 1;
   min-height: 0;
 }
@@ -44,15 +24,6 @@
   border-radius: 0.5rem;
   padding: 0.5rem;
   box-sizing: border-box;
-}
-
-.map-panel-filters-title {
-  margin: 0 0 0.25rem;
-  padding-bottom: 0.25rem;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text);
-  border-bottom: 1px solid var(--text-muted);
 }
 
 .map-panel-filter-section {
@@ -210,56 +181,6 @@
   margin-top: 0.125rem;
 }
 
-.map-panel-filter-section input[type='date'] {
-  background-color: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 0.25em 0.375em;
-  border-radius: 0.25rem;
-  font-family: inherit;
-  font-size: 0.8125rem;
-  color-scheme: dark;
-  width: 100%;
-  margin-top: 0.125em;
-}
-
-.map-panel-legend {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background-color: var(--bg);
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  box-sizing: border-box;
-}
-
-.map-panel-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  font-size: 0.875rem;
-}
-
-.legend-square,
-.legend-circle {
-  width: 0.625rem;
-  height: 0.625rem;
-  flex-shrink: 0;
-}
-
-.legend-circle {
-  border-radius: 50%;
-}
-
-.legend-green {
-  background-color: var(--green);
-}
-
-.legend-red {
-  background-color: var(--red);
-}
-
 .map-panel-content {
   flex: 1;
   display: flex;
@@ -289,15 +210,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-}
-
-.subpanel-title {
-  margin: 0 0 0.25rem;
-  padding-bottom: 0.25rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--text);
-  border-bottom: 1px solid var(--text-muted);
 }
 
 .subpanel-list {
@@ -333,6 +245,8 @@
 }
 
 .subpanel-row-date {
+  display: flex;
+  gap: 0.5rem;
   font-size: 0.6875rem;
   opacity: 0.75;
   font-family: inherit;

@@ -1,18 +1,11 @@
-.gantt-panel {
-  padding: 0.75rem;
-  height: 100%;
-  box-sizing: border-box;
-  background-color: var(--panel-bg);
-  border-radius: 0.5rem;
+.gantt-panel-body {
   display: flex;
-  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  align-items: center;
 }
 
-.gantt-panel h3 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.5rem;
-  font-size: 1.25rem;
-  color: var(--text);
-  border-bottom: 1px solid var(--text-muted);
+.gantt-panel-chart {
+  flex: 1;
+  min-width: 0;
 }
